@@ -1,0 +1,26 @@
+{
+  "name": "dhcp-mon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "out/index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "mocha out/test",
+    "install": "npm run build",
+    "build": "tsc",
+    "build:source": "tsc --declaration --declarationDir types",
+    "coverage": "nyc npm test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/mocha": "^2.2.33",
+    "@types/node": "^6.0.52"
+  }, 
+  "devDependencies": {
+    "mocha": "*",
+    "nyc": "*",
+    "coveralls": "^2.11.15"
+  }
+}
