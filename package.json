@@ -7,6 +7,7 @@
   "scripts": {
     "test": "mocha out/test",
     "build": "tsc",
+    "build:map": "tsc --sourceMap",
     "build:source": "tsc --declaration --declarationDir types",
     "patch": "npm version patch",
     "pub": "npm run patch && npm publish && git push",
