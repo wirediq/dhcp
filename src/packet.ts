@@ -68,7 +68,7 @@ export class Packet {
     options: PacketOptions = [];
 
     /**
-     * Возвращает тип DHCP пакета
+     * Returns DHCPMessageType of DHCP packet
      * 
      * @readonly
      * @type {number}
@@ -85,6 +85,13 @@ export class Packet {
         return dhcpType;
     }
 
+    /**
+     * Encodes DHCP packet to Buffer
+     * 
+     * @returns {Buffer}
+     * 
+     * @memberOf Packet
+     */
     toBuffer(): Buffer {
         let buffer = new Buffer(512);
         buffer.fill(0);
@@ -126,6 +133,13 @@ export class Packet {
         return buffer.slice(0, 240 + raw.length);
     }
 
+    /**
+     * Decodes Buffer to DHCP Packet
+     * 
+     * @param {Buffer} buffer
+     * 
+     * @memberOf Packet
+     */
     fromBuffer(buffer: Buffer) {
         this.op = buffer[0];
         this.htype = buffer[1];
@@ -167,12 +181,28 @@ export class Packet {
         }
     }
 
+    /**
+     * Creates new DHCP Packet from Buffer
+     * 
+     * @static
+     * @param {Buffer} buffer
+     * @returns
+     * 
+     * @memberOf Packet
+     */
     static fromBuffer(buffer: Buffer) {
         let packet = new Packet();
         packet.fromBuffer(buffer);
         return packet;
     }
 
+    /**
+     * Converts DHCP Packet to String
+     * 
+     * @returns
+     * 
+     * @memberOf Packet
+     */
     toString() {
 
 
@@ -211,6 +241,16 @@ export class Packet {
         return str.join("\n");
     }
 
+
+    /**
+     * Returns first DHCP Option matched to type
+     * - if Option not found returns null
+     * 
+     * @param {DHCPOptions} type
+     * @returns
+     * 
+     * @memberOf Packet
+     */
     find(type: DHCPOptions) {
         let res: Option<any> | null = null;
         const options = this.options.filter(o => o.type === type);

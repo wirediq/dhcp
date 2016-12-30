@@ -48,6 +48,10 @@ export class Socket extends EventEmitter {
             this.emit("listening");
         });
 
+        this.socket.on("error", err => {
+            this.emit("error", err);
+        });
+
         this.socket.on("message", this.onMessage.bind(this));
     }
 

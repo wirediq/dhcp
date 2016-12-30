@@ -89,6 +89,14 @@ export class Server extends Socket {
         return super.once.apply(this, arguments);
     }
 
+    /**
+     * Creates DHCP Offer Packet
+     * 
+     * @param {Packet} request
+     * @returns
+     * 
+     * @memberOf Server
+     */
     createOffer(request: Packet) {
         let p = new Packet();
         p.op = BOOTMessageType.reply;
@@ -108,6 +116,15 @@ export class Server extends Socket {
         return p;
     }
 
+
+    /**
+     * Creates DHCP Ack Packet
+     * 
+     * @param {Packet} pocket
+     * @returns
+     * 
+     * @memberOf Server
+     */
     createAck(pocket: Packet) {
         let p = new Packet();
         p.op = BOOTMessageType.reply;
@@ -129,6 +146,14 @@ export class Server extends Socket {
         return p;
     }
 
+    /**
+     * Creates DHCP Nak Packet
+     * 
+     * @param {Packet} pocket
+     * @returns
+     * 
+     * @memberOf Server
+     */
     createNak(pocket: Packet) {
         let p = new Packet();
         p.op = BOOTMessageType.reply;
