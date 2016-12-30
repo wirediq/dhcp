@@ -7,3 +7,5 @@
 .circle.yml
 tsconfig.json
 tslint.json
+/out/**/_*
+/out/**/*.map

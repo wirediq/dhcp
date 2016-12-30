@@ -9,6 +9,7 @@
     "build": "tsc",
     "build:map": "tsc --sourceMap",
     "build:source": "tsc --declaration --declarationDir types",
+    "prepatch": "npm run build",
     "patch": "npm version patch",
     "pub": "npm run patch && npm publish && git push",
     "coverage": "nyc npm test",
