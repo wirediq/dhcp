@@ -1,9 +1,22 @@
 {
   "name": "dhcp-mon",
   "version": "1.0.1",
-  "description": "",
+  "description": "NodeJS implementation of DHCP socket connection",
   "main": "out/index.js",
   "types": "index.d.ts",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "@types/node": "^6.0.52"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.33",
+    "mocha": "*",
+    "nyc": "*",
+    "coveralls": "^2.11.15",
+    "typescript": "^2"
+  },
   "scripts": {
     "test": "mocha out/test",
     "build": "tsc",
@@ -14,6 +27,10 @@
     "pub": "npm run patch && npm publish && git push",
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TrustedPlus/dhcp-mon.git"
   },
   "keywords": [
     "dhcp",
@@ -29,14 +46,8 @@
     "Protasova Elena<lendjeina@gmail.com>"
   ],
   "license": "MIT",
-  "dependencies": {
-    "@types/node": "^6.0.52"
+  "bugs": {
+    "url": "https://github.com/TrustedPlus/dhcp-mon/issues"
   },
-  "devDependencies": {
-    "@types/mocha": "^2.2.33",
-    "mocha": "*",
-    "nyc": "*",
-    "coveralls": "^2.11.15",
-    "typescript": "^2"
-  }
+  "homepage": "https://github.com/TrustedPlus/dhcp-mon#readme"
 }
