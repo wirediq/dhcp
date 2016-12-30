@@ -18,7 +18,7 @@ s.on("discover", e => {
 
     let pkt = e.packet;
 
-    // Назначение IP по MAC адресу
+    // Get IP by MAC
     let ip = "0.0.0.0";
     if (pkt.op === BOOTMessageType.request) {
         if (!(pkt.chaddr in ips))

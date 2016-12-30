@@ -6,21 +6,25 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "mocha out/test",
-    "install": "npm run build",
     "build": "tsc",
     "build:source": "tsc --declaration --declarationDir types",
-    "coverage": "nyc npm test"
+    "patch": "npm version patch",
+    "pub": "npm run patch && npm publish && git push",
+    "coverage": "nyc npm test",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
-  "keywords": [],
+  "keywords": ["dhcp", "net", "mac", "server", "client", "socket"],
   "author": "",
+  "contributors": [
+    "Miroshin Stepan<microshine@mail.ru>"
+  ],
   "license": "MIT",
-  "dependencies": {
-    "@types/mocha": "^2.2.33",
-    "@types/node": "^6.0.52"
-  }, 
   "devDependencies": {
+    "@types/mocha": "^2.2.33",
+    "@types/node": "^6.0.52",
     "mocha": "*",
     "nyc": "*",
-    "coveralls": "^2.11.15"
+    "coveralls": "^2.11.15",
+    "typescript": "^2"
   }
 }
