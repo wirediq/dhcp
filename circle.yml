@@ -4,6 +4,7 @@ machine:
 
 test:
   pre:
+    - npm run build:map
     - npm run coverage
 
   post:
