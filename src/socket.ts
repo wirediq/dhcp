@@ -35,7 +35,7 @@ export class Socket extends EventEmitter {
         return this.socket.address();
     }
 
-    constructor(type: SocketType = "udp4", inPort: number, outPort: number) {
+    constructor(type: SocketType = "udp4", inPort: number = 67, outPort: number = 68) {
         super();
 
         this.socket = createSocket(type);
