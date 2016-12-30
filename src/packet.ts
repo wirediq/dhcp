@@ -51,7 +51,7 @@ export type PacketOptions = Option<any>[];
 
 export class Packet {
 
-    op: BOOTMessageType;
+    op: BOOTMessageType = BOOTMessageType.request;
     htype: number = 1;
     hlen: number = 6;
     hops: number = 0;
