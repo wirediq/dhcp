@@ -1,6 +1,6 @@
 {
   "name": "dhcp-mon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "out/index.js",
   "types": "index.d.ts",
@@ -15,7 +15,14 @@
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
-  "keywords": ["dhcp", "net", "mac", "server", "client", "socket"],
+  "keywords": [
+    "dhcp",
+    "net",
+    "mac",
+    "server",
+    "client",
+    "socket"
+  ],
   "author": "",
   "contributors": [
     "Miroshin Stepan<microshine@mail.ru>",
