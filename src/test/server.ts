@@ -56,15 +56,15 @@ describe("Server", () => {
             let pkt = new Packet();
             s.createOffer(pkt);
             assert.equal(s.serverId, "192.168.1.1");
-            assert.equal(s.gateways, []);
-            assert.equal(s.domainServer, []);
+            assert.equal(s.gateways.length, 0);
+            assert.equal(s.domainServer.length, 0);
 
-            s.gateways = ["gateways"];
-            s.domainServer = ["domainServer"];
+            s.gateways = ["192.168.1.1"];
+            s.domainServer = ["192.168.1.1"];
             s.createOffer(pkt);
             assert.equal(s.serverId, "192.168.1.1");
-            assert.equal(s.gateways, ["gateways"]);
-            assert.equal(s.domainServer, ["domainServer"]);
+            assert.equal(s.gateways.join(), "192.168.1.1");
+            assert.equal(s.domainServer.join(), "192.168.1.1");
 
             // pkt.chaddr = "a1:a2:a3:a4:a5:a6";
             // pkt.options.push(new DHCPMessageTypeOption(DHCPMessageType.decline));
