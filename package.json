@@ -18,12 +18,15 @@
   "keywords": ["dhcp", "net", "mac", "server", "client", "socket"],
   "author": "",
   "contributors": [
-    "Miroshin Stepan<microshine@mail.ru>"
+    "Miroshin Stepan<microshine@mail.ru>",
+    "Protasova Elena<lendjeina@gmail.com>"
   ],
   "license": "MIT",
+  "dependencies": {
+    "@types/node": "^6.0.52"
+  },
   "devDependencies": {
     "@types/mocha": "^2.2.33",
-    "@types/node": "^6.0.52",
     "mocha": "*",
     "nyc": "*",
     "coveralls": "^2.11.15",
