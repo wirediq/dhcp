@@ -46,43 +46,40 @@ describe("Server", () => {
         });
 
         it("on dhcp", done => {
-            s.listenPort = 1967;
-            s.sendPort = 1968;
+            let serv = new Server("192.168.1.1");
+            serv.listenPort = 1969;
+            serv.sendPort = 1970;
 
-            let s2 = new Server("192.168.1.1");
-            s2.listenPort = 1968;
-            s2.sendPort = 1967;
+            let serv2 = new Server("192.168.1.1");
+            serv2.listenPort = 1970;
+            serv2.sendPort = 1969;
 
-            s2.on("dhcp", e => {
-                assert.equal(e.target, s2);
+            serv2.on("dhcp", e => {
+                assert.equal(e.target, serv2);
                 assert.equal(e.packet.toBuffer().toString("hex"), hex);
+                serv2.close();
                 done();
             });
 
-            s.bind();
-            s2.bind();
+            serv.bind();
+            serv2.bind();
 
             let pkt = Packet.fromBuffer(new Buffer(hex, "hex"));
-            s.send(pkt);
+            serv.send(pkt);
         });
 
     });
     context("Creates DHCP Packet", () => {
         s.gateways = ["192.168.1.1"];
         s.domainServer = ["192.168.1.1"];
-        it("createOffer", () => {
-            // let s = new Server("192.168.1.1");
-            // let pkt = new Packet();
 
+        it("createOffer", () => {
             s.createOffer(pkt);
 
             assert.equal(s.serverId, "192.168.1.1");
             assert.equal(s.gateways.join(), "192.168.1.1");
             assert.equal(s.domainServer.join(), "192.168.1.1");
 
-            // pkt.chaddr = "a1:a2:a3:a4:a5:a6";
-            // pkt.options.push(new DHCPMessageTypeOption(DHCPMessageType.decline));
-            // console.log(pkt.toBuffer().toString("hex"));
         });
         it("createOffer empty gateways & domainServer", () => {
             let s = new Server("192.168.1.1");
@@ -105,6 +102,7 @@ describe("Server", () => {
             let s = new Server("192.168.1.1");
             let pkt = Packet.fromBuffer(new Buffer(hex, "hex"));
             s.createAck(pkt);
+
             assert.equal(s.serverId, "192.168.1.1");
             assert.equal(s.gateways.length, 0);
             assert.equal(s.domainServer.length, 0);
@@ -112,8 +110,8 @@ describe("Server", () => {
         });
 
         it("createNak", () => {
-            let s = new Server("192.168.1.1");
             s.createNak(pkt);
+            assert.equal(s.serverId, "192.168.1.1");
         });
     });
 });
