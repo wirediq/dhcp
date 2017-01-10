@@ -14,7 +14,7 @@ context("socket", () => {
             done();
         });
 
-         s1.bind();
+        s1.bind();
     });
 
     it("default constructor", () => {
@@ -101,6 +101,15 @@ context("socket", () => {
             let packet = Packet.fromBuffer(new Buffer(hex, "hex"));
             packet.op = 3;
             s1.send(packet);
+        });
+
+        it("on error", done => {
+            let s3 = new Socket("udp4", 1967, 1968);
+            s3.on("error", e => {
+                assert.equal(e.name, "Error");
+                done();
+            });
+            s3.bind();
         });
     });
 });
