@@ -103,12 +103,12 @@ export class Socket extends EventEmitter {
         this.socket.bind(this.listenPort, address);
     }
 
-    send(packet: Packet) {
+    send(packet: Packet, address: string = BROADCAST) {
         this.emit("send", {
             target: this,
             packet
         });
         let buf = packet.toBuffer();
-        this.socket.send(buf, 0, buf.length, this.sendPort, BROADCAST);
+        this.socket.send(buf, 0, buf.length, this.sendPort, address);
     }
 }

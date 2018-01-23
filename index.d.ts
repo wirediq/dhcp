@@ -548,7 +548,7 @@ declare namespace DHCP {
         emit(event: string | symbol, ...args: any[]): boolean;
 
         bind(address?: string): void;
-        send(packet: Packet): void;
+        send(packet: Packet, address?: string): void;
     }
 
     export interface ServerOptions {
