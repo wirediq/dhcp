@@ -59,6 +59,7 @@ export class Socket extends EventEmitter {
         let buf = new Buffer(msg, "binary");
 
         let packet = Packet.fromBuffer(buf);
+        packet.reinfo = reinfo;
 
         if ((packet.op === BOOTMessageType.request || packet.op === BOOTMessageType.reply) &&
             packet.options.some(option => option.type === DHCPOptions.DhcpMessageType)) {
@@ -103,12 +104,20 @@ export class Socket extends EventEmitter {
         this.socket.bind(this.listenPort, address);
     }
 
-    send(packet: Packet, address: string = BROADCAST) {
+    send(packet: Packet, address: string = BROADCAST, sendPort?: number) {
         this.emit("send", {
             target: this,
-            packet
+            packet, 
+            address, 
+            sendPort
         });
         let buf = packet.toBuffer();
-        this.socket.send(buf, 0, buf.length, this.sendPort, address);
+
+        if(typeof sendPort !== "number")
+        {
+            sendPort = this.sendPort;
+        }
+
+        this.socket.send(buf, 0, buf.length, sendPort, address);
     }
 }

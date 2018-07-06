@@ -485,6 +485,7 @@ declare namespace DHCP {
         sname: string;
         file: string;
         options: PacketOptions;
+        reinfo?: AddressInfo;
         /**
          * Возвращает тип DHCP пакета
          *
@@ -548,7 +549,7 @@ declare namespace DHCP {
         emit(event: string | symbol, ...args: any[]): boolean;
 
         bind(address?: string): void;
-        send(packet: Packet, address?: string): void;
+        send(packet: Packet, address?: string, sendPort?: number): void;
     }
 
     export interface ServerOptions {
