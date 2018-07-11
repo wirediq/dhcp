@@ -4,7 +4,7 @@
 /src
 /coverage
 /types
-.circle.yml
+/.circleci
 tsconfig.json
 tslint.json
 /test
