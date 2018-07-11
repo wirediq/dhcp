@@ -1,3 +1,5 @@
+import { AddressInfo } from "dgram";
+
 import { DEFAULT_MAC, DEFAULT_IP } from "./const";
 import { BOOTMessageType, DHCPOptions, DHCPMessageType } from "./enum";
 import { IpConverter, MacConverter } from "./converters";
@@ -66,6 +68,7 @@ export class Packet {
     sname: string = "";
     file: string = "";
     options: PacketOptions = [];
+    reinfo?: AddressInfo = undefined;
 
     /**
      * Returns DHCPMessageType of DHCP packet
