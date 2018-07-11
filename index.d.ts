@@ -1,6 +1,7 @@
 /// <reference types="node" />
 
-import { Socket as NodeSocket, AddressInfo } from "dgram";
+import { Socket as NodeSocket } from "dgram";
+import { AddressInfo } from "net";
 
 declare namespace DHCP {
 
@@ -354,33 +355,31 @@ declare namespace DHCP {
     // option.ts
 
     export abstract class Option<T> {
-        type: DHCPOptions;
-        name: string;
-        value: T;
+        public static create(messageType: DHCPOptions): typeof Option | null;
+        public static fromBuffer<T extends Option<any>>(this: { new(): T; }, data: Buffer): T;
+        public type: DHCPOptions;
+        public name: string;
+        public value: T;
         protected constructor(type: DHCPOptions, value?: T);
-        abstract toBuffer(): Buffer;
-        abstract fromBuffer(data: Buffer): void;
-        static fromBuffer<T extends Option<any>>(this: {
-            new (): T;
-        }, data: Buffer): T;
-        static create(messageType: DHCPOptions): typeof Option | null;
+        public abstract toBuffer(): Buffer;
+        public abstract fromBuffer(data: Buffer): void;
     }
     export class EndOption extends Option<null> {
         constructor();
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class Uint8Option extends Option<number> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class Uint16Option extends Option<number> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class Uint32Option extends Option<number> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     /**
      * DHCP Message Type
@@ -393,20 +392,20 @@ declare namespace DHCP {
         constructor(type?: DHCPMessageType);
     }
     export abstract class IpAddressOption extends Option<string> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class NumberListOption extends Option<number[]> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class BufferOption extends Option<Buffer> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class Utf8Option extends Option<string> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export class ParameterListOption extends NumberListOption {
         constructor(data?: number[]);
@@ -441,18 +440,18 @@ declare namespace DHCP {
     export class RebindingTimeOption extends Uint32Option {
         constructor(data?: number);
     }
-    export type ClientIdentifier = {
+    export interface ClientIdentifier {
         htype: number;
         chaddr: string;
-    };
+    }
     export class ClientIdentifierOption extends Option<ClientIdentifier> {
         constructor(data?: ClientIdentifier);
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export abstract class IpAddressListOption extends Option<string[]> {
-        toBuffer(): Buffer;
-        fromBuffer(data: Buffer): void;
+        public toBuffer(): Buffer;
+        public fromBuffer(data: Buffer): void;
     }
     export class GatewaysOption extends IpAddressListOption {
         constructor(data?: string[]);
@@ -468,24 +467,25 @@ declare namespace DHCP {
 
     // packet.ts
 
-    export type PacketOptions = Option<any>[];
+    export type PacketOptions = Array<Option<any>>;
     export class Packet {
-        op: BOOTMessageType;
-        htype: number;
-        hlen: number;
-        hops: number;
-        xid: number;
-        secs: number;
-        flags: number;
-        ciaddr: string;
-        yiaddr: string;
-        siaddr: string;
-        giaddr: string;
-        chaddr: string;
-        sname: string;
-        file: string;
-        options: PacketOptions;
-        reinfo?: AddressInfo;
+        public static fromBuffer(buffer: Buffer): Packet;
+        public op: BOOTMessageType;
+        public htype: number;
+        public hlen: number;
+        public hops: number;
+        public xid: number;
+        public secs: number;
+        public flags: number;
+        public ciaddr: string;
+        public yiaddr: string;
+        public siaddr: string;
+        public giaddr: string;
+        public chaddr: string;
+        public sname: string;
+        public file: string;
+        public options: PacketOptions;
+        public reinfo?: AddressInfo;
         /**
          * Возвращает тип DHCP пакета
          *
@@ -493,12 +493,11 @@ declare namespace DHCP {
          * @type {number}
          * @memberOf Packet
          */
-        readonly type: number;
-        toBuffer(): Buffer;
-        fromBuffer(buffer: Buffer): void;
-        static fromBuffer(buffer: Buffer): Packet;
-        toString(): string;
-        find(type: DHCPOptions): Option<any> | null;
+        public readonly type: number;
+        public toBuffer(): Buffer;
+        public fromBuffer(buffer: Buffer): void;
+        public toString(): string;
+        public find(type: DHCPOptions): Option<any> | null;
     }
 
     // socket.ts
@@ -521,35 +520,32 @@ declare namespace DHCP {
     export type SocketSendEventHandle<T> = EventHandler<SocketSendEvent<T>>;
 
     export class Socket extends NodeJS.EventEmitter {
-        listenPort: number;
-        sendPort: number;
+        public listenPort: number;
+        public sendPort: number;
+        public type: SocketType;
+        public readonly address: AddressInfo;
         protected socket: NodeSocket;
-        type: SocketType;
-        readonly address: AddressInfo;
         constructor(type: SocketType, inPort: number, outPort: number);
+        public close(): void;
+        public on(event: string, cb: (...args: any[]) => void): this;
+        public on(event: "send", listener: SocketSendEventHandle<this>): this;
+        public on(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "listening", cb: () => void): this;
+        public on(event: "close", listener: () => void): this;
+        public on(event: "error", listener: (err: Error) => void): this;
+        public once(event: string, cb: (...args: any[]) => void): this;
+        public once(event: "send", listener: SocketSendEventHandle<this>): this;
+        public once(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
+        public once(event: "listening", cb: () => void): this;
+        public once(event: "close", listener: () => void): this;
+        public once(event: "error", listener: (err: Error) => void): this;
+        public emit(event: "send", listener: SocketSendEventHandle<this>): boolean;
+        public emit(event: "dhcp", listener: SocketMessageEventHandle<this>): boolean;
+        public emit(event: "error", e: Error): boolean;
+        public emit(event: string | symbol, ...args: any[]): boolean;
+        public bind(address?: string): void;
+        public send(packet: Packet, address?: string, sendPort?: number): void;
         protected onMessage(msg: string, reinfo: AddressInfo): void;
-        close(): void;
-        on(event: string, cb: Function): this;
-        on(event: "send", listener: SocketSendEventHandle<this>): this;
-        on(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
-        on(event: "listening", cb: () => void): this;
-        on(event: "close", listener: () => void): this;
-        on(event: "error", listener: (err: Error) => void): this;
-
-        once(event: string, cb: Function): this;
-        once(event: "send", listener: SocketSendEventHandle<this>): this;
-        once(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
-        once(event: "listening", cb: () => void): this;
-        once(event: "close", listener: () => void): this;
-        once(event: "error", listener: (err: Error) => void): this;
-
-        emit(event: "send", listener: SocketSendEventHandle<this>): boolean;
-        emit(event: "dhcp", listener: SocketMessageEventHandle<this>): boolean;
-        emit(event: "error", e: Error): boolean;
-        emit(event: string | symbol, ...args: any[]): boolean;
-
-        bind(address?: string): void;
-        send(packet: Packet, address?: string, sendPort?: number): void;
     }
 
     export interface ServerOptions {
@@ -564,42 +560,42 @@ declare namespace DHCP {
         gateways?: string[];
     }
     export class Server extends Socket {
-        serverId: string;
-        ipAddress: {
+        public serverId: string;
+        public ipAddress: {
             min: number;
             max: number;
         };
-        netmask: string;
-        addressTime: number;
-        domainServer: string[];
-        gateways: string[];
+        public netmask: string;
+        public addressTime: number;
+        public domainServer: string[];
+        public gateways: string[];
         constructor(serverId: string);
         constructor(options: ServerOptions);
-        on(event: string, cb: Function): this;
-        on(event: "discover", listener: SocketMessageEventHandle<this>): this;
-        on(event: "inform", listener: SocketMessageEventHandle<this>): this;
-        on(event: "request", listener: SocketMessageEventHandle<this>): this;
-        on(event: "release", listener: SocketMessageEventHandle<this>): this;
-        on(event: "decline", listener: SocketMessageEventHandle<this>): this;
-        on(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
-        on(event: "send", listener: SocketSendEventHandle<this>): this;
-        on(event: "listening", cb: () => void): this;
-        on(event: "close", listener: () => void): this;
-        on(event: "error", listener: (err: Error) => void): this;
-        once(event: string, cb: Function): this;
-        once(event: "listening", cb: () => void): this;
-        once(event: "discover", listener: (e: SocketMessageEvent<this>) => void): this;
-        once(event: "inform", listener: (e: SocketMessageEvent<this>) => void): this;
-        once(event: "request", listener: (e: SocketMessageEvent<this>) => void): this;
-        once(event: "release", listener: (e: SocketMessageEvent<this>) => void): this;
-        once(event: "decline", listener: (e: SocketMessageEvent<this>) => void): this;
-        once(event: "send", listener: SocketSendEventHandle<this>): this;
-        once(event: "close", listener: () => void): this;
-        once(event: "error", listener: (err: Error) => void): this;
-        once(event: "dhcp", cb: (packet: Packet) => void): this;
-        createOffer(request: Packet): Packet;
-        createAck(packet: Packet): Packet;
-        createNak(packet: Packet): Packet;
+        public on(event: string, cb: (...args: any[]) => void): this;
+        public on(event: "discover", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "inform", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "request", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "release", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "decline", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
+        public on(event: "send", listener: SocketSendEventHandle<this>): this;
+        public on(event: "listening", cb: () => void): this;
+        public on(event: "close", listener: () => void): this;
+        public on(event: "error", listener: (err: Error) => void): this;
+        public once(event: string, cb: (...args: any[]) => void): this;
+        public once(event: "listening", cb: () => void): this;
+        public once(event: "discover", listener: (e: SocketMessageEvent<this>) => void): this;
+        public once(event: "inform", listener: (e: SocketMessageEvent<this>) => void): this;
+        public once(event: "request", listener: (e: SocketMessageEvent<this>) => void): this;
+        public once(event: "release", listener: (e: SocketMessageEvent<this>) => void): this;
+        public once(event: "decline", listener: (e: SocketMessageEvent<this>) => void): this;
+        public once(event: "send", listener: SocketSendEventHandle<this>): this;
+        public once(event: "close", listener: () => void): this;
+        public once(event: "error", listener: (err: Error) => void): this;
+        public once(event: "dhcp", cb: (packet: Packet) => void): this;
+        public createOffer(request: Packet): Packet;
+        public createAck(packet: Packet): Packet;
+        public createNak(packet: Packet): Packet;
     }
 
 }
