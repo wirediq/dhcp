@@ -1,28 +1,14 @@
-import { DHCPOptions, DHCPMessageType } from "./enum";
 import { IpConverter, MacConverter } from "./converters";
+import { DHCPMessageType, DHCPOptions } from "./enum";
 
 export abstract class Option<T> {
-
-    type: DHCPOptions;
-    name: string;
-    value: T;
-
-    protected constructor(type: DHCPOptions, value?: T) {
-        this.type = type;
-        this.name = DHCPOptions[type];
-        if (value !== void 0)
-            this.value = value;
-    }
-
-    abstract toBuffer(): Buffer;
-    abstract fromBuffer(data: Buffer): void;
-    static fromBuffer<T extends Option<any>>(this: { new (): T }, data: Buffer) {
-        let option = new this();
+    public static fromBuffer<T extends Option<any>>(this: { new (): T }, data: Buffer) {
+        const option = new this();
         option.fromBuffer(data);
         return option;
     }
 
-    static create(messageType: DHCPOptions): typeof Option {
+    public static create(messageType: DHCPOptions): typeof Option {
         let res: any = UnknownOption;
         switch (messageType) {
             case DHCPOptions.SubnetMask:
@@ -79,6 +65,21 @@ export abstract class Option<T> {
         }
         return res;
     }
+
+    public type: DHCPOptions;
+    public name: string;
+    public value: T;
+
+    protected constructor(type: DHCPOptions, value?: T) {
+        this.type = type;
+        this.name = DHCPOptions[type];
+        if (value !== void 0) {
+            this.value = value;
+        }
+    }
+
+    public abstract toBuffer(): Buffer;
+    public abstract fromBuffer(data: Buffer): void;
 }
 
 export class EndOption extends Option<null> {
@@ -86,22 +87,21 @@ export class EndOption extends Option<null> {
         super(DHCPOptions.End, null);
     }
 
-    toBuffer(): Buffer {
+    public toBuffer(): Buffer {
         return new Buffer([255]);
     }
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.value = null;
     }
 }
 
-
 export abstract class Uint8Option extends Option<number> {
 
-    toBuffer() {
+    public toBuffer() {
         return new Buffer([this.type, 1, this.value]);
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = data[2];
     }
@@ -110,13 +110,13 @@ export abstract class Uint8Option extends Option<number> {
 
 export abstract class Uint16Option extends Option<number> {
 
-    toBuffer() {
-        let buf = new Buffer([this.type, 2, 0, 0]);
+    public toBuffer() {
+        const buf = new Buffer([this.type, 2, 0, 0]);
         buf.writeUInt16BE(this.value, 2);
         return buf;
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = data.readUInt16BE(2);
     }
@@ -125,13 +125,13 @@ export abstract class Uint16Option extends Option<number> {
 
 export abstract class Uint32Option extends Option<number> {
 
-    toBuffer() {
-        let buf = new Buffer([this.type, 4, 0, 0, 0, 0]);
+    public toBuffer() {
+        const buf = new Buffer([this.type, 4, 0, 0, 0, 0]);
         buf.writeUInt32BE(this.value, 2);
         return buf;
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = data.readUInt32BE(2);
     }
@@ -140,7 +140,7 @@ export abstract class Uint32Option extends Option<number> {
 
 /**
  * DHCP Message Type
- * 
+ *
  * @export
  * @class DHCPMessageTypeOption
  * @extends {Uint8Option}
@@ -153,14 +153,14 @@ export class DHCPMessageTypeOption extends Uint8Option {
 
 export abstract class IpAddressOption extends Option<string> {
 
-    toBuffer() {
+    public toBuffer() {
         return Buffer.concat([
             new Buffer([this.type, 4]),
-            IpConverter.encode(this.value)
+            IpConverter.encode(this.value),
         ]);
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = IpConverter.decode(data.slice(2));
     }
@@ -169,17 +169,17 @@ export abstract class IpAddressOption extends Option<string> {
 
 export abstract class NumberListOption extends Option<number[]> {
 
-    toBuffer() {
+    public toBuffer() {
         return Buffer.concat([
             new Buffer([this.type, this.value.length]),
-            new Buffer(this.value)
+            new Buffer(this.value),
         ]);
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
-        let buf = data.slice(2);
-        let value: number[] = [];
+        const buf = data.slice(2);
+        const value: number[] = [];
         for (let i = 0; i < buf.length; i++) {
             value.push(buf[i]);
         }
@@ -190,14 +190,14 @@ export abstract class NumberListOption extends Option<number[]> {
 
 export abstract class BufferOption extends Option<Buffer> {
 
-    toBuffer() {
+    public toBuffer() {
         return Buffer.concat([
             new Buffer([this.type, this.value.length]),
-            this.value
+            this.value,
         ]);
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = data.slice(2);
     }
@@ -205,15 +205,15 @@ export abstract class BufferOption extends Option<Buffer> {
 }
 export abstract class Utf8Option extends Option<string> {
 
-    toBuffer() {
-        let text = new Buffer(this.value, "utf8");
+    public toBuffer() {
+        const text = new Buffer(this.value, "utf8");
         return Buffer.concat([
             new Buffer([this.type, text.byteLength]),
-            text
+            text,
         ]);
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = data.slice(2).toString("utf8");
     }
@@ -282,7 +282,7 @@ export class RebindingTimeOption extends Uint32Option {
     }
 }
 
-export type ClientIdentifier = {
+export interface ClientIdentifier {
     htype: number;
     chaddr: string;
 }
@@ -291,34 +291,34 @@ export class ClientIdentifierOption extends Option<ClientIdentifier> {
         super(DHCPOptions.ClientId, data);
     }
 
-    toBuffer() {
-        let chaddr = MacConverter.encode(this.value.chaddr);
+    public toBuffer() {
+        const chaddr = MacConverter.encode(this.value.chaddr);
         return Buffer.concat([
             new Buffer([this.type, chaddr.byteLength + 1, this.value.htype]),
-            chaddr
+            chaddr,
         ]);
     }
 
-    fromBuffer(data: Buffer) {
+    public fromBuffer(data: Buffer) {
         this.type = data[0];
         this.value = {
             htype: data[2],
-            chaddr: MacConverter.decode(data.slice(3))
+            chaddr: MacConverter.decode(data.slice(3)),
         };
     }
 }
 
 export abstract class IpAddressListOption extends Option<string[]> {
-    toBuffer() {
-        let buffers = this.value.map(addr => IpConverter.encode(addr));
+    public toBuffer() {
+        let buffers = this.value.map((addr) => IpConverter.encode(addr));
         buffers = [new Buffer([this.type, this.value.length * 4])].concat(buffers);
         return Buffer.concat(buffers);
     }
 
-    fromBuffer(data: Buffer) {
-        let res: string[] = [];
+    public fromBuffer(data: Buffer) {
+        const res: string[] = [];
         data = data.slice(2);
-        let count = data.length / 4;
+        const count = data.length / 4;
         for (let i = 0; i < count; i++) {
             res.push(IpConverter.decode(data.slice(i * 4, i * 4 + 4)));
         }

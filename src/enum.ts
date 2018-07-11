@@ -75,7 +75,7 @@
  *   128-154 Reserved
  *
  *   255     End               0          None
- * 
+ *
  */
 
 export enum DHCPOptions {
