@@ -7,5 +7,6 @@
 .circle.yml
 tsconfig.json
 tslint.json
+/test
 /out/**/_*
 /out/**/*.map
