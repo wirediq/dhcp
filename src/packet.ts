@@ -1,3 +1,4 @@
+import { AddressInfo } from "net";
 import { DEFAULT_IP, DEFAULT_MAC } from "./const";
 import { IpConverter, MacConverter } from "./converters";
 import { BOOTMessageType, DHCPMessageType, DHCPOptions } from "./enum";
@@ -81,6 +82,7 @@ export class Packet {
     public sname: string = "";
     public file: string = "";
     public options: PacketOptions = [];
+    public reinfo?: AddressInfo;
 
     /**
      * Returns DHCPMessageType of DHCP packet

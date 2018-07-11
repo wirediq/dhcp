@@ -60,7 +60,7 @@ export class Socket extends EventEmitter {
         this.socket.close();
     }
 
-    public on(event: string, cb: Function): this;
+    public on(event: string, cb: (...args: any[]) => void): this;
     public on(event: "send", listener: SocketSendEventHandle<this>): this;
     public on(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
     public on(event: "listening", cb: () => void): this;
@@ -70,7 +70,7 @@ export class Socket extends EventEmitter {
         return super.on.apply(this, arguments);
     }
 
-    public once(event: string, cb: Function): this;
+    public once(event: string, cb: (...args: any[]) => void): this;
     public once(event: "send", listener: SocketSendEventHandle<this>): this;
     public once(event: "dhcp", listener: SocketMessageEventHandle<this>): this;
     public once(event: "listening", cb: () => void): this;
@@ -92,19 +92,27 @@ export class Socket extends EventEmitter {
         this.socket.bind(this.listenPort, address);
     }
 
-    public send(packet: Packet, address: string = BROADCAST) {
+    public send(packet: Packet, address: string = BROADCAST, sendPort?: number) {
         this.emit("send", {
             target: this,
             packet,
+            address,
+            sendPort,
         });
         const buf = packet.toBuffer();
-        this.socket.send(buf, 0, buf.length, this.sendPort, address);
+
+        if (typeof sendPort !== "number") {
+            sendPort = this.sendPort;
+        }
+
+        this.socket.send(buf, 0, buf.length, sendPort, address);
     }
 
-    protected onMessage(msg: string) {
+    protected onMessage(msg: string, reinfo: AddressInfo) {
         const buf = new Buffer(msg, "binary");
 
         const packet = Packet.fromBuffer(buf);
+        packet.reinfo = reinfo;
 
         if ((packet.op === BOOTMessageType.request || packet.op === BOOTMessageType.reply) &&
             packet.options.some((option) => option.type === DHCPOptions.DhcpMessageType)) {
