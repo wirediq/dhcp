@@ -1,11 +1,11 @@
 # DHCP-MON
 
 [![license](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/TrustedPlus/dhcp-mon/master/LICENSE) 
-[![CircleCI](https://circleci.com/gh/TrustedPlus/dhcp-mon.svg?style=svg)](https://circleci.com/gh/TrustedPlus/dhcp-mon)
+[![CircleCI](https://circleci.com/gh/TrustedPlus/dhcp.svg?style=svg)](https://circleci.com/gh/TrustedPlus/dhcp)
 [![Coverage Status](https://coveralls.io/repos/github/TrustedPlus/dhcp-mon/badge.svg?branch=master)](https://coveralls.io/github/TrustedPlus/dhcp-mon?branch=master)
-[![NPM version](https://badge.fury.io/js/dhcp-mon.png)](http://badge.fury.io/js/dhcp-mon)
+[![npm version](https://badge.fury.io/js/dhcp-mon.svg)](https://badge.fury.io/js/dhcp-mon)
 
-[![NPM](https://nodei.co/npm-dl/dhcp-mon.png?months=2&height=2)](https://nodei.co/npm/dhcp-mon/)
+[![NPM](https://nodei.co/npm/dhcp-mon.png)](https://nodei.co/npm/dhcp-mon/)
 
 NodeJS implementation of DHCP socket connection
 
