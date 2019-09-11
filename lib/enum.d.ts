@@ -77,8 +77,7 @@
  *   255     End               0          None
  *
  */
-
-export enum DHCPOptions {
+export declare enum DHCPOptions {
     /**
      * None
      * Size: 0
@@ -344,9 +343,6 @@ export enum DHCPOptions {
      * Size: 1
      */
     Overload = 52,
-    /*1          DHCP Message Type
-    * Size: Type
-     */
     DhcpMessageType = 53,
     /**
      * DHCP Server Identification
@@ -412,12 +408,9 @@ export enum DHCPOptions {
      * Bootfile name
      * Size: N
      */
-    End = 255,
-    //  64-127  Unassigned
-    //  128-154 Reserved
+    End = 255
 }
-
-export enum DHCPMessageType {
+export declare enum DHCPMessageType {
     discover = 1,
     offer = 2,
     request = 3,
@@ -425,10 +418,9 @@ export enum DHCPMessageType {
     ack = 5,
     nak = 6,
     release = 7,
-    inform = 8,
+    inform = 8
 }
-
-export enum BOOTMessageType {
+export declare enum BOOTMessageType {
     request = 1,
-    reply = 2,
+    reply = 2
 }

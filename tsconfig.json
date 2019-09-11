@@ -1,16 +1,21 @@
 {
+  "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "esnext",
         "noImplicitAny": true,
         "strictNullChecks": true,
-        "sourceMap": false,
-        "outDir": "out"
+        "outDir": "lib",
+        "rootDir": "src",
+        "composite": true
     },
-    "exclude": [
+    "references": [
+    
+  ],
+  "exclude": [
+    "*/lib/**/*.d.ts",
+    "./lib/**/*.d.ts",
         "index.d.ts",
         "types",
         "node_modules",
         "test"
-    ],
+    ]
 }
