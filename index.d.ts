@@ -450,10 +450,10 @@ declare namespace DHCP {
     export class RebindingTimeOption extends Uint32Option {
         constructor(data?: number);
     }
-    export class TftpServerOption extends IpAddressOption {
+    export class TftpServerOption extends Utf8Option {
         constructor(data?: string);
     }
-    export class BootFileOption extends IpAddressOption {
+    export class BootFileOption extends Utf8Option {
         constructor(data?: string);
     }
     export interface ClientIdentifier {

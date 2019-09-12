@@ -287,12 +287,12 @@ export class RebindingTimeOption extends Uint32Option {
         super(DHCPOptions.RebindingTime, data);
     }
 }
-export class TftpServerOption extends IpAddressOption { //TODO: Is IPAddressOption good for this and BootFile?
+export class TftpServerOption extends Utf8Option {
     constructor(data?: string) {
         super(DHCPOptions.TftpServer, data);
     }
 }
-export class BootFileOption extends IpAddressOption { //TODO: Is IPAddressOption good for this and TftpServer?
+export class BootFileOption extends Utf8Option {
     constructor(data?: string) {
         super(DHCPOptions.BootFile, data);
     }

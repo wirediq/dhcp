@@ -88,10 +88,10 @@ export declare class RenewalTimeOption extends Uint32Option {
 export declare class RebindingTimeOption extends Uint32Option {
     constructor(data?: number);
 }
-export declare class TftpServerOption extends IpAddressOption {
+export declare class TftpServerOption extends Utf8Option {
     constructor(data?: string);
 }
-export declare class BootFileOption extends IpAddressOption {
+export declare class BootFileOption extends Utf8Option {
     constructor(data?: string);
 }
 export interface ClientIdentifier {
